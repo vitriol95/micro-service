@@ -3,28 +3,33 @@ package vitriol.userservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vitriol.userservice.dto.UserDto;
+import vitriol.userservice.jpa.UserEntity;
 import vitriol.userservice.service.UserService;
-import vitriol.userservice.vo.Greeting;
 import vitriol.userservice.vo.RequestUser;
 import vitriol.userservice.vo.ResponseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/user-service")
 public class UserController {
 
     private final MessageSource messageSource;
     private final UserService userService;
     private final ModelMapper mapper;
-    private final Greeting greeting;
+    private final Environment env;
+//    private final Greeting greeting;
 
     @GetMapping("/health_check")
     public String status() {
-        return "It's working in User Service";
+        return String.format("It's working in User Service on Port %s", env.getProperty("local.server.port"));
     }
 
     @GetMapping("/welcome")
@@ -39,5 +44,25 @@ public class UserController {
         userService.createUser(userDto);
         ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<ResponseUser>> getUsers() {
+
+        Iterable<UserEntity> userList = userService.getUserByAll();
+        List<ResponseUser> result = new ArrayList<>();
+
+        userList.forEach(userEntity -> {
+            result.add(mapper.map(userEntity, ResponseUser.class));
+        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId) {
+        UserDto userDto = userService.getUserByUserId(userId);
+        ResponseUser returnValue = mapper.map(userDto, ResponseUser.class);
+        return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
 }
