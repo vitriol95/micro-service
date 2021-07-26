@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/user-service")
+@RequiredArgsConstructor // http://127.0.0.1:60000/welcome 식으로
 public class UserController {
 
     private final MessageSource messageSource;

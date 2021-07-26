@@ -18,7 +18,7 @@ spring:
 
 eureka:
   instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.instance_id:${random.value}}
     lease-expiration-duration-in-seconds: 2
     lease-renewal-interval-in-seconds: 1
   client:
@@ -30,3 +30,11 @@ eureka:
 
 greeting:
   message: Welcome to the Simple E-commerce
+
+logging:
+  level:
+    vitriol.userservice: debug
+
+token:
+  expiration_time: 86400000
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
