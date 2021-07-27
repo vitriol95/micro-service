@@ -24,6 +24,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
 //                .authorizeRequests().mvcMatchers("/users/**").permitAll()
+                .authorizeRequests().antMatchers("/actuator/**").permitAll()
+                .and()
                 .authorizeRequests().antMatchers("/**").hasIpAddress("192.168.0.10")
                 .and()
                 .headers().frameOptions().disable();
