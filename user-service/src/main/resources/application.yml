@@ -38,7 +38,7 @@ greeting:
 
 logging:
   level:
-    vitriol.userservice: debug
+    vitriol.userservice.client: debug
 
 #token:
 #  expiration_time: 86400000
