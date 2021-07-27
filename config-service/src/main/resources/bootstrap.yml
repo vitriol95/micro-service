@@ -1,0 +1,8 @@
+encrypt:
+  # 대칭키로 사용
+  # key: abcdefghijklmnopqrstuvwxyz0123456789
+  key-store:
+    location: file:///${user.home}/project/keystore/apiEncryptionKey.jks
+    password: test1234
+    alias: apiEncryptionKey
+
