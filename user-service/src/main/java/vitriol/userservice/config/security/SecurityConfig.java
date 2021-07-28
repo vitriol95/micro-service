@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .authorizeRequests().mvcMatchers("/users/**").permitAll()
                 .authorizeRequests().antMatchers("/actuator/**").permitAll()
                 .and()
-                .authorizeRequests().antMatchers("/**").hasIpAddress("192.168.0.10")
+                .authorizeRequests().antMatchers("/**").permitAll()
                 .and()
                 .headers().frameOptions().disable();
 
