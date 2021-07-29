@@ -4,6 +4,8 @@ import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -36,6 +38,8 @@ public class UserServiceImpl implements UserService {
     private final Environment env;
     private final RestTemplate restTemplate;
     private final OrderServiceClient orderServiceClient;
+
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -72,7 +76,15 @@ public class UserServiceImpl implements UserService {
 //        } catch (FeignException ex) {
 //            log.error(ex.getMessage());
 //        }
-        List<ResponseOrder> ordersList = orderServiceClient.getOrders(userId);
+        /* ErrorDecoder */
+//        List<ResponseOrder> ordersList = orderServiceClient.getOrders(userId);
+
+        /** Circuit Breaker */
+        log.info("Before call orders microservice");
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
+        List<ResponseOrder> ordersList = circuitBreaker.run(() -> orderServiceClient.getOrders(userId),
+                throwable -> new ArrayList<>());
+        log.info("After called orders microservice");
         userDto.setOrders(ordersList);
 
         return userDto;
