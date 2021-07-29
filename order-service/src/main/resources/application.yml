@@ -45,3 +45,8 @@ eureka:
 logging:
   level:
     vitriol.orderservice: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, httptrace, info, metrics, prometheus

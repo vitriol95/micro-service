@@ -1,5 +1,6 @@
 package vitriol.userservice.controller;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
@@ -27,6 +28,7 @@ public class UserController {
 //    private final Greeting greeting;
 
     @GetMapping("/health_check")
+    @Timed(value = "users.status", longTask = true)
     public String status() {
         return String.format("It's working in User Service" + ", port(local.server.port)=" + env.getProperty("local.server.port")
                 + ", port(server.port)=" + env.getProperty("server.port")
@@ -35,6 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/welcome")
+    @Timed(value = "users.welcome", longTask = true)
     public String welcome() {
 //        return greeting.getMessage();
         return messageSource.getMessage("greeting.message", null, null); // 두가지 방법 존재
